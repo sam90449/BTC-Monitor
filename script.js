@@ -1,5 +1,5 @@
 const API_URL =
-"https://wispy-dawn-5bf8.jacky12345cheung.workers.dev/";
+"https://withered-shape-2779.jacky12345cheung.workers.dev/";
 
 function safeSetText(id, text) {
 
