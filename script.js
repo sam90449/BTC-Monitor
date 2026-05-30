@@ -1,205 +1,329 @@
 const WORKER_URL =
 "https://withered-shape-2779.jacky12345cheung.workers.dev/";
 
-async function updateReport() {
+const defaultCoins = [
+  "BTC",
+  "HOME",
+  "TON",
+  "SUI",
+  "SOL",
+  "IOTA"
+];
 
-    try {
+function loadSavedCoins() {
 
-        const response =
-        await fetch(
-            WORKER_URL +
-            "?t=" +
-            Date.now()
-        );
+  const arr = [];
 
-        const d =
-        await response.json();
+  for (let i = 1; i <= 6; i++) {
 
-        let report = "";
+    const coin =
+      localStorage.getItem(
+        "coin" + i
+      );
 
-        report += "==================================================\n";
-        report += "BTC 即時分析 REPORT\n";
-        report += "==================================================\n\n";
+    arr.push(
+      coin || defaultCoins[i - 1]
+    );
+  }
 
-        report +=
-        "UPDATE_TIME_HK=\n";
-
-        report +=
-        d.updateTime +
-        "\n\n";
-
-        report +=
-        "SYMBOL=BTCUSDT\n\n";
-
-        report +=
-        "--------------------------------------------------\n";
-
-        report +=
-        "【市場價格】\n";
-
-        report +=
-        "--------------------------------------------------\n\n";
-
-        report +=
-        "PRICE:\n";
-
-        report +=
-        d.btcPrice +
-        "\n\n";
-
-        report +=
-        "LATEST CLOSE:\n";
-
-        report +=
-        d.latestClose +
-        "\n\n";
-
-        report +=
-        "--------------------------------------------------\n";
-
-        report +=
-        "【移動平均線】\n";
-
-        report +=
-        "--------------------------------------------------\n\n";
-
-        report +=
-        "MA5:\n";
-
-        report +=
-        d.ma5 +
-        "\n\n";
-
-        report +=
-        "MA15:\n";
-
-        report +=
-        d.ma15 +
-        "\n\n";
-
-        report +=
-        "MA20:\n";
-
-        report +=
-        d.ma20 +
-        "\n\n";
-
-        report +=
-        "MA30:\n";
-
-        report +=
-        d.ma30 +
-        "\n\n";
-
-        report +=
-        "--------------------------------------------------\n";
-
-        report +=
-        "【Slope 分析】\n";
-
-        report +=
-        "--------------------------------------------------\n\n";
-
-        report +=
-        "A:\n";
-
-        report +=
-        d.A +
-        "\n\n";
-
-        report +=
-        "B:\n";
-
-        report +=
-        d.B +
-        "\n\n";
-
-        report +=
-        "Ratio:\n";
-
-        report +=
-        d.ratio +
-        "\n\n";
-
-        report +=
-        "--------------------------------------------------\n";
-
-        report +=
-        "【1-3H Prediction】\n";
-
-        report +=
-        "--------------------------------------------------\n\n";
-
-        report +=
-        "Direction:\n";
-
-        report +=
-        d.sign +
-        "\n\n";
-
-        report +=
-        "PIC:\n";
-
-        report +=
-        d.pic +
-        "\n\n";
-
-        report +=
-        "Prediction:\n";
-
-        report +=
-        d.finalPercent +
-        "%\n\n";
-
-        report +=
-        "Target:\n";
-
-        report +=
-        d.targetPrice +
-        "\n\n";
-
-        report +=
-        "--------------------------------------------------\n";
-
-        report +=
-        "Raw Predict:\n";
-
-        report +=
-        d.rawPredict +
-        "%\n\n";
-
-        report +=
-        "==================================================\n";
-
-        report +=
-        "END OF REPORT\n";
-
-        report +=
-        "==================================================";
-
-        document
-        .getElementById(
-            "report"
-        )
-        .textContent =
-        report;
-
-    }
-    catch(err){
-
-        document
-        .getElementById(
-            "report"
-        )
-        .textContent =
-        "Error:\n\n" +
-        err.message;
-    }
+  return arr;
 }
 
-updateReport();
+function saveCoin(index, coin) {
+
+  localStorage.setItem(
+    "coin" + index,
+    coin.toUpperCase()
+  );
+}
+
+function buildCard(index) {
+
+  const container =
+    document.getElementById(
+      "coin" + index
+    );
+
+  container.innerHTML = `
+    <div class="card-title">
+      COIN ${index}
+    </div>
+
+    <div class="input-row">
+
+      <input
+      id="input${index}"
+      type="text">
+
+      <button
+      onclick="reloadCoin(${index})">
+
+      LOAD
+
+      </button>
+
+    </div>
+
+    <div
+    id="price${index}"
+    class="price">
+
+    Loading...
+
+    </div>
+
+    <div
+    id="prediction${index}"
+    class="prediction">
+
+    ...
+
+    </div>
+
+    <div
+    id="target${index}"
+    class="target">
+
+    ...
+
+    </div>
+
+    <div
+    id="update${index}"
+    class="update">
+
+    ...
+
+    </div>
+  `;
+}
+
+function initCards() {
+
+  for (
+    let i = 1;
+    i <= 6;
+    i++
+  ) {
+
+    buildCard(i);
+  }
+
+  const coins =
+    loadSavedCoins();
+
+  for (
+    let i = 1;
+    i <= 6;
+    i++
+  ) {
+
+    document
+      .getElementById(
+        "input" + i
+      )
+      .value =
+      coins[i - 1];
+  }
+}
+
+async function fetchCoin(
+  symbol
+) {
+
+  const url =
+    WORKER_URL +
+    "?symbol=" +
+    encodeURIComponent(
+      symbol
+    ) +
+    "&t=" +
+    Date.now();
+
+  const res =
+    await fetch(url);
+
+  const data =
+    await res.json();
+
+  return data;
+}
+
+function setText(
+  id,
+  text
+) {
+
+  const el =
+    document.getElementById(id);
+
+  if (el) {
+
+    el.textContent =
+      text;
+  }
+}
+
+function setHTML(
+  id,
+  html
+) {
+
+  const el =
+    document.getElementById(id);
+
+  if (el) {
+
+    el.innerHTML =
+      html;
+  }
+}
+
+async function updateCoin(
+  index
+) {
+
+  try {
+
+    const symbol =
+      document
+        .getElementById(
+          "input" + index
+        )
+        .value
+        .trim()
+        .toUpperCase();
+
+    if (!symbol) {
+
+      return;
+    }
+
+    const d =
+      await fetchCoin(
+        symbol
+      );
+
+    if (!d.success) {
+
+      setText(
+        "price" + index,
+        "Invalid Coin"
+      );
+
+      return;
+    }
+
+    setText(
+      "price" + index,
+      d.symbol +
+      " : " +
+      d.price
+    );
+
+    let color =
+      "up";
+
+    if (
+      d.direction === "-"
+    ) {
+
+      color =
+        "down";
+    }
+
+    setHTML(
+      "prediction" +
+      index,
+
+      `<span class="${color}">
+      PIC :
+      ${d.pic}
+      ${d.direction}
+      ${d.finalPercent}%
+      </span>`
+    );
+
+    setText(
+      "target" +
+      index,
+
+      "Target : " +
+      d.targetPrice
+    );
+
+    setText(
+      "update" +
+      index,
+
+      "Update : " +
+      d.updateTime
+    );
+
+  }
+  catch (e) {
+
+    setText(
+      "price" +
+      index,
+
+      "Error"
+    );
+
+    setText(
+      "prediction" +
+      index,
+
+      e.message
+    );
+  }
+}
+
+async function updateAll() {
+
+  for (
+    let i = 1;
+    i <= 6;
+    i++
+  ) {
+
+    await updateCoin(i);
+  }
+}
+
+function reloadCoin(
+  index
+) {
+
+  const coin =
+    document
+      .getElementById(
+        "input" + index
+      )
+      .value
+      .trim()
+      .toUpperCase();
+
+  if (!coin) {
+
+    return;
+  }
+
+  saveCoin(
+    index,
+    coin
+  );
+
+  updateCoin(
+    index
+  );
+}
+
+initCards();
+
+updateAll();
 
 setInterval(
-    updateReport,
-    60000
+  updateAll,
+  60000
 );
