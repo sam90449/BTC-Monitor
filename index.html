@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTC Liquidity Monitor</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div class="main-title">
+    BTC 宏觀方向（4-24小時） + 短線預測（1-3小時）
+</div>
+
+<div class="prediction-wrapper">
+
+    <div class="prediction-box">
+
+        <div class="box-title">
+            BTC 未來1-3小時預測
+        </div>
+
+        <div class="grid-row">
+            <div class="label up">▲1%</div>
+            <div class="cells" id="btc_up_1"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label up">▲1.5%</div>
+            <div class="cells" id="btc_up_15"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label up">▲2%</div>
+            <div class="cells" id="btc_up_2"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label down">▼1%</div>
+            <div class="cells" id="btc_down_1"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label down">▼1.5%</div>
+            <div class="cells" id="btc_down_15"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label down">▼2%</div>
+            <div class="cells" id="btc_down_2"></div>
+        </div>
+
+    </div>
+
+    <div class="middle-divider">
+        ||||
+    </div>
+
+    <div class="prediction-box">
+
+        <div class="box-title">
+            道瓊斯 未來1-3小時預測
+        </div>
+
+        <div class="grid-row">
+            <div class="label up">▲1%</div>
+            <div class="cells" id="dow_up_1"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label up">▲1.5%</div>
+            <div class="cells" id="dow_up_15"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label up">▲2%</div>
+            <div class="cells" id="dow_up_2"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label down">▼1%</div>
+            <div class="cells" id="dow_down_1"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label down">▼1.5%</div>
+            <div class="cells" id="dow_down_15"></div>
+        </div>
+
+        <div class="grid-row">
+            <div class="label down">▼2%</div>
+            <div class="cells" id="dow_down_2"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="major-alert" id="alertBox">
+    Loading...
+</div>
+
+<div class="short-predict" id="predictionText">
+    Loading...
+</div>
+
+<div class="btc-price" id="btcPrice">
+    Loading...
+</div>
+
+<div class="btc-volume" id="btcVolume">
+    Loading...
+</div>
+
+<div class="macro-direction" id="macroText">
+    Loading...
+</div>
+
+<div class="macro-reason" id="macroReason">
+    Loading...
+</div>
+
+<div class="global-data">
+
+    <div class="global-item dxy" id="dxy">
+        Loading...
+    </div>
+
+    <div class="global-item dow" id="dow">
+        Loading...
+    </div>
+
+    <div class="global-item us10y" id="us10y">
+        Loading...
+    </div>
+
+    <div class="global-item vix" id="vix">
+        Loading...
+    </div>
+
+    <div class="global-item gold" id="gold">
+        Loading...
+    </div>
+
+    <div class="global-item fear" id="fear">
+        Loading...
+    </div>
+
+</div>
+
+<div id="updateTime" style="display:none;">
+    Loading...
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,210 @@
+body{
+    margin:0;
+    background:#000;
+    color:#00ffff;
+    font-family:Arial;
+    overflow-x:hidden;
+}
+
+.main-title{
+    text-align:center;
+    font-size:56px;
+    font-weight:bold;
+    margin-top:35px;
+    color:#00f7ff;
+}
+
+.prediction-wrapper{
+    width:1100px;
+    margin:30px auto;
+    border:1px solid #333;
+    display:flex;
+    justify-content:space-between;
+    padding:35px;
+    box-sizing:border-box;
+}
+
+.prediction-box{
+    width:420px;
+}
+
+.box-title{
+    text-align:center;
+    font-size:38px;
+    margin-bottom:25px;
+    color:#00ffff;
+    font-weight:bold;
+}
+
+.grid-row{
+    display:flex;
+    align-items:center;
+    margin-bottom:22px;
+}
+
+.label{
+    width:90px;
+    font-size:32px;
+    font-weight:bold;
+}
+
+.up{
+    color:#00ff99;
+}
+
+.down{
+    color:#ff4455;
+}
+
+.cells{
+    display:flex;
+    gap:10px;
+}
+
+.cell{
+    width:34px;
+    height:34px;
+    border:1px solid #666;
+    background:#222;
+}
+
+.fill-green{
+    background:#00ff99;
+}
+
+.fill-red{
+    background:#ff4455;
+}
+
+.middle-divider{
+    color:#999;
+    font-size:60px;
+    display:flex;
+    align-items:center;
+}
+
+.major-alert{
+    text-align:center;
+    margin-top:10px;
+    font-size:30px;
+    color:#00ffaa;
+    font-weight:bold;
+}
+
+.short-predict{
+    text-align:center;
+    margin-top:18px;
+    font-size:24px;
+    color:#00eaff;
+    font-weight:bold;
+}
+
+.btc-price{
+    text-align:center;
+    margin-top:24px;
+    font-size:58px;
+    color:#ff5555;
+    font-weight:bold;
+}
+
+.btc-volume{
+    text-align:center;
+    margin-top:8px;
+    font-size:20px;
+    color:#ffffff;
+}
+
+.macro-direction{
+    text-align:center;
+    margin-top:28px;
+    font-size:52px;
+    font-weight:bold;
+    color:yellow;
+}
+
+.macro-reason{
+    text-align:center;
+    margin-top:10px;
+    font-size:22px;
+    color:#cccccc;
+}
+
+.global-data{
+    width:100%;
+    margin-top:25px;
+    padding-bottom:50px;
+}
+
+.global-item{
+    text-align:center;
+    font-size:28px;
+    margin-top:18px;
+    font-weight:bold;
+}
+
+.dxy{
+    color:#ff5555;
+}
+
+.dow{
+    color:#00ffaa;
+}
+
+.us10y{
+    color:#00ffaa;
+}
+
+.vix{
+    color:#ff5577;
+}
+
+.gold{
+    color:#ff4444;
+}
+
+.fear{
+    color:#ffff00;
+}
+
+@media screen and (max-width:1200px){
+
+    .main-title{
+        font-size:28px;
+        padding:10px;
+    }
+
+    .prediction-wrapper{
+        width:95%;
+        flex-direction:column;
+        gap:50px;
+    }
+
+    .prediction-box{
+        width:100%;
+    }
+
+    .middle-divider{
+        display:none;
+    }
+
+    .box-title{
+        font-size:26px;
+    }
+
+    .label{
+        font-size:22px;
+        width:70px;
+    }
+
+    .btc-price{
+        font-size:36px;
+    }
+
+    .macro-direction{
+        font-size:30px;
+    }
+
+    .global-item{
+        font-size:22px;
+    }
+}
