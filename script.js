@@ -127,16 +127,12 @@ function initCards() {
   }
 }
 
-async function fetchCoin(
-  symbol
-) {
+async function fetchCoin(symbol) {
 
   const url =
     WORKER_URL +
     "?symbol=" +
-    encodeURIComponent(
-      symbol
-    ) +
+    encodeURIComponent(symbol) +
     "&t=" +
     Date.now();
 
@@ -149,39 +145,29 @@ async function fetchCoin(
   return data;
 }
 
-function setText(
-  id,
-  text
-) {
+function setText(id, text) {
 
   const el =
     document.getElementById(id);
 
   if (el) {
 
-    el.textContent =
-      text;
+    el.textContent = text;
   }
 }
 
-function setHTML(
-  id,
-  html
-) {
+function setHTML(id, html) {
 
   const el =
     document.getElementById(id);
 
   if (el) {
 
-    el.innerHTML =
-      html;
+    el.innerHTML = html;
   }
 }
 
-async function updateCoin(
-  index
-) {
+async function updateCoin(index) {
 
   try {
 
@@ -195,20 +181,22 @@ async function updateCoin(
         .toUpperCase();
 
     if (!symbol) {
-
       return;
     }
 
     const d =
-      await fetchCoin(
-        symbol
-      );
+      await fetchCoin(symbol);
 
     if (!d.success) {
 
       setText(
         "price" + index,
         "Invalid Coin"
+      );
+
+      setText(
+        "prediction" + index,
+        d.error || ""
       );
 
       return;
@@ -221,41 +209,39 @@ async function updateCoin(
       d.price
     );
 
-    let color =
-      "up";
+    let color = "up";
 
-    if (
-      d.direction === "-"
-    ) {
-
-      color =
-        "down";
+    if (!d.bullish) {
+      color = "down";
     }
 
     setHTML(
-      "prediction" +
-      index,
+      "prediction" + index,
 
       `<span class="${color}">
-      PIC :
-      ${d.pic}
-      ${d.direction}
-      ${d.finalPercent}%
+      1-3H Prediction :
+      ${d.predictionText}
       </span>`
     );
 
+    if (d.ratio <= 1) {
+
+      setText(
+        "target" + index,
+        ""
+      );
+
+    } else {
+
+      setText(
+        "target" + index,
+        "Target : " +
+        d.targetPrice
+      );
+    }
+
     setText(
-      "target" +
-      index,
-
-      "Target : " +
-      d.targetPrice
-    );
-
-    setText(
-      "update" +
-      index,
-
+      "update" + index,
       "Update : " +
       d.updateTime
     );
@@ -264,17 +250,18 @@ async function updateCoin(
   catch (e) {
 
     setText(
-      "price" +
-      index,
-
+      "price" + index,
       "Error"
     );
 
     setText(
-      "prediction" +
-      index,
-
+      "prediction" + index,
       e.message
+    );
+
+    setText(
+      "target" + index,
+      ""
     );
   }
 }
@@ -291,9 +278,7 @@ async function updateAll() {
   }
 }
 
-function reloadCoin(
-  index
-) {
+function reloadCoin(index) {
 
   const coin =
     document
@@ -305,7 +290,6 @@ function reloadCoin(
       .toUpperCase();
 
   if (!coin) {
-
     return;
   }
 
