@@ -1,97 +1,205 @@
-async function loadReport() {
+const WORKER_URL =
+"https://withered-shape-2779.jacky12345cheung.workers.dev/";
 
-  const workerUrl =
-    "YOUR_WORKER_URL";
+async function updateReport() {
 
-  const res = await fetch(workerUrl);
+    try {
 
-  const d = await res.json();
+        const response =
+        await fetch(
+            WORKER_URL +
+            "?t=" +
+            Date.now()
+        );
 
-  const report = `
-==================================================
-BTC 即時分析 REPORT
-==================================================
+        const d =
+        await response.json();
 
-UPDATE_TIME_HK=
-${d.updateTime}
+        let report = "";
 
-SYMBOL=BTCUSDT
+        report += "==================================================\n";
+        report += "BTC 即時分析 REPORT\n";
+        report += "==================================================\n\n";
 
---------------------------------------------------
-【市場價格】
---------------------------------------------------
+        report +=
+        "UPDATE_TIME_HK=\n";
 
-LATEST CLOSE：
-${d.latestClose}
+        report +=
+        d.updateTime +
+        "\n\n";
 
---------------------------------------------------
-【移動平均線】
---------------------------------------------------
+        report +=
+        "SYMBOL=BTCUSDT\n\n";
 
-MA5：
-${d.ma5}
+        report +=
+        "--------------------------------------------------\n";
 
-MA15：
-${d.ma15}
+        report +=
+        "【市場價格】\n";
 
-MA20：
-${d.ma20}
+        report +=
+        "--------------------------------------------------\n\n";
 
-MA30：
-${d.ma30}
+        report +=
+        "PRICE:\n";
 
---------------------------------------------------
-【Slope 分析】
---------------------------------------------------
+        report +=
+        d.btcPrice +
+        "\n\n";
 
-A SLOPE：
-${d.A}
+        report +=
+        "LATEST CLOSE:\n";
 
-B SLOPE：
-${d.B}
+        report +=
+        d.latestClose +
+        "\n\n";
 
-RATIO：
-${d.ratio}
+        report +=
+        "--------------------------------------------------\n";
 
---------------------------------------------------
-【1-3小時預測】
---------------------------------------------------
+        report +=
+        "【移動平均線】\n";
 
-方向：
-${d.trend}
+        report +=
+        "--------------------------------------------------\n\n";
 
-Prediction：
-${d.finalPercent}%
+        report +=
+        "MA5:\n";
 
-Target：
-${d.targetPrice}
+        report +=
+        d.ma5 +
+        "\n\n";
 
---------------------------------------------------
-【勝算評級】
---------------------------------------------------
+        report +=
+        "MA15:\n";
 
-${d.pic}
+        report +=
+        d.ma15 +
+        "\n\n";
 
---------------------------------------------------
-【演算法判定】
---------------------------------------------------
+        report +=
+        "MA20:\n";
 
-rawPredict：
-${d.rawPredict}
+        report +=
+        d.ma20 +
+        "\n\n";
 
-==================================================
-END OF REPORT
-==================================================
-`;
+        report +=
+        "MA30:\n";
 
-  document.getElementById(
-    "report"
-  ).textContent = report;
+        report +=
+        d.ma30 +
+        "\n\n";
+
+        report +=
+        "--------------------------------------------------\n";
+
+        report +=
+        "【Slope 分析】\n";
+
+        report +=
+        "--------------------------------------------------\n\n";
+
+        report +=
+        "A:\n";
+
+        report +=
+        d.A +
+        "\n\n";
+
+        report +=
+        "B:\n";
+
+        report +=
+        d.B +
+        "\n\n";
+
+        report +=
+        "Ratio:\n";
+
+        report +=
+        d.ratio +
+        "\n\n";
+
+        report +=
+        "--------------------------------------------------\n";
+
+        report +=
+        "【1-3H Prediction】\n";
+
+        report +=
+        "--------------------------------------------------\n\n";
+
+        report +=
+        "Direction:\n";
+
+        report +=
+        d.sign +
+        "\n\n";
+
+        report +=
+        "PIC:\n";
+
+        report +=
+        d.pic +
+        "\n\n";
+
+        report +=
+        "Prediction:\n";
+
+        report +=
+        d.finalPercent +
+        "%\n\n";
+
+        report +=
+        "Target:\n";
+
+        report +=
+        d.targetPrice +
+        "\n\n";
+
+        report +=
+        "--------------------------------------------------\n";
+
+        report +=
+        "Raw Predict:\n";
+
+        report +=
+        d.rawPredict +
+        "%\n\n";
+
+        report +=
+        "==================================================\n";
+
+        report +=
+        "END OF REPORT\n";
+
+        report +=
+        "==================================================";
+
+        document
+        .getElementById(
+            "report"
+        )
+        .textContent =
+        report;
+
+    }
+    catch(err){
+
+        document
+        .getElementById(
+            "report"
+        )
+        .textContent =
+        "Error:\n\n" +
+        err.message;
+    }
 }
 
-loadReport();
+updateReport();
 
 setInterval(
-  loadReport,
-  60000
+    updateReport,
+    60000
 );
