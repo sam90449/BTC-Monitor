@@ -280,7 +280,9 @@ async function loadData() {
 
         safeSetText(
             "predictionText",
-            `短線預測 | 15m: ${(btcChange / 18).toFixed(2)}% | 30m: ${(btcChange / 9).toFixed(2)}%`
+            `PIC: ${globalData.pic}
+Target: ${globalData.targetPrice}
+Ratio: ${globalData.ratio}`
         );
 
         safeSetText(
@@ -310,7 +312,10 @@ async function loadData() {
 
         safeSetText(
             "macroReason",
-            "全球宏觀數據分析中..."
+            `A:${globalData.A}
+B:${globalData.B}
+RAW:${globalData.rawPredict}%
+FINAL:${globalData.finalPercent}%`
         );
 
         safeSetText(
@@ -340,7 +345,7 @@ async function loadData() {
 
         safeSetText(
             "fear",
-            `MARKET FEAR: ${globalData.fear.text} (${globalData.fear.value})`
+            `PIC: ${globalData.pic}`
         );
 
         safeSetText(
