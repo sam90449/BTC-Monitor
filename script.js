@@ -96,48 +96,67 @@ async function fetchAll(){
     return await res.json();
 }
 
-function updateCard(
-    index,
-    coin
-){
+function formatPrice(v){
+
+    const n = Number(v);
+
+    if(isNaN(n)){
+        return v;
+    }
+
+    return n.toFixed(4);
+}
+
+function formatPercent(v){
+
+    const n = Number(v);
+
+    if(isNaN(n)){
+        return "0.00%";
+    }
+
+    return n.toFixed(2) + "%";
+}
+
+function updateCard(index,coin){
 
     if(!coin){
         return;
     }
 
-    const pair =
-        coin.pair || "";
-
-    const price =
-        coin.price || "";
-
     setText(
         "price"+index,
-        pair +
+        coin.pair +
         " : " +
-        price
+        formatPrice(
+            coin.price
+        )
     );
 
-    let arrow="↓";
-    let moveText="下跌";
+    const percent =
+        formatPercent(
+            coin.finalPercent || 0
+        );
 
     if(coin.bullish){
 
-        arrow="↑";
-        moveText="上升";
+        setHTML(
+            "move"+index,
+            `<span class="up">
+            ↑ 上升 ${percent}
+            </span>`
+        );
+
+    }else{
+
+        setHTML(
+            "move"+index,
+            `<span class="down">
+            ↓ 下跌 ${percent}
+            </span>`
+        );
 
     }
-
-    setText(
-        "move"+index,
-        arrow +
-        " " +
-        moveText +
-        " " +
-        (
-            coin.finalPercent || ""
-        )
-    );
 
     const txt =
         String(
@@ -147,15 +166,9 @@ function updateCard(
     let cls="down";
 
     if(
-        txt.includes("普通")
-    ){
-        cls="normal";
-    }
-
-    if(
-        txt.includes("中高") ||
+        txt.includes("極高") ||
         txt.includes("高勝算率") ||
-        txt.includes("極高")
+        txt.includes("中高")
     ){
         cls="up";
     }
@@ -171,15 +184,16 @@ function updateCard(
     ){
 
         picText +=
-            "<br>(Target:" +
-            coin.targetPrice +
-            ")";
+        `<br>(Target:${formatPrice(
+            coin.targetPrice
+        )})`;
+
     }
 
     setHTML(
         "prediction"+index,
         `<span class="${cls}">
-            ${picText}
+        ${picText}
         </span>`
     );
 }
@@ -204,24 +218,18 @@ async function updateAll(){
             i++
         ){
 
-            const coin =
+            updateCard(
+                i,
                 getCoinByIndex(
                     data,
                     i-1
-                );
-
-            updateCard(
-                i,
-                coin
+                )
             );
         }
 
     }catch(e){
 
-        console.log(
-            "updateAll error",
-            e
-        );
+        console.log(e);
 
     }
 }
@@ -268,11 +276,7 @@ function updateClock(){
 
     setText(
         "hkClock",
-        hh +
-        ":" +
-        mm +
-        ":" +
-        ss
+        `${hh}:${mm}:${ss}`
     );
 }
 
