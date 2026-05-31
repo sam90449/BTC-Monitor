@@ -1,117 +1,160 @@
 const WORKER_URL =
 "https://wispy-dawn-5bf8.jacky12345cheung.workers.dev/";
 
-function setText(id, text) {
+const defaultCoins = [
+  "BTC",
+  "HOME",
+  "TON",
+  "SUI",
+  "SOL",
+  "IOTA"
+];
+
+function buildCard(index){
 
   const el =
-    document.getElementById(id);
-
-  if (el) {
-
-    el.textContent = text;
-  }
-}
-
-function setHTML(id, html) {
-
-  const el =
-    document.getElementById(id);
-
-  if (el) {
-
-    el.innerHTML = html;
-  }
-}
-
-async function fetchAllCoins() {
-
-  const res =
-    await fetch(
-      WORKER_URL +
-      "?t=" +
-      Date.now()
+    document.getElementById(
+      "coin" + index
     );
 
-  return await res.json();
+  el.innerHTML = `
+
+  <div class="card-title">
+  COIN ${index}
+  </div>
+
+  <div class="price"
+       id="price${index}">
+  Loading...
+  </div>
+
+  <div class="prediction"
+       id="prediction${index}">
+  ...
+  </div>
+
+  <div class="target"
+       id="target${index}">
+  ...
+  </div>
+
+  <div class="update"
+       id="update${index}">
+  ...
+  </div>
+
+  `;
 }
 
-async function updateAll() {
+function setText(id,text){
 
-  try {
+  const el =
+    document.getElementById(id);
+
+  if(el){
+    el.textContent=text;
+  }
+}
+
+function setHTML(id,html){
+
+  const el =
+    document.getElementById(id);
+
+  if(el){
+    el.innerHTML=html;
+  }
+}
+
+async function updateAll(){
+
+  try{
+
+    const res =
+      await fetch(
+        WORKER_URL +
+        "?t=" +
+        Date.now()
+      );
 
     const data =
-      await fetchAllCoins();
+      await res.json();
 
-    if (
+    if(
       !data.success ||
       !data.coins
-    ) {
-
+    ){
       return;
     }
 
     data.coins.forEach(
-      (d, idx) => {
+      (d,idx)=>{
 
-        const index =
-          idx + 1;
+      const i =
+        idx + 1;
 
-        setText(
-          "price" + index,
-          d.pair +
-          " : " +
-          d.price
-        );
+      setText(
+        "price"+i,
+        d.pair +
+        " : " +
+        d.price
+      );
 
-        let color =
-          d.bullish
-          ? "up"
-          : "down";
+      const color =
+        d.bullish
+        ? "up"
+        : "down";
 
-        setHTML(
+      setHTML(
 
-          "prediction" + index,
+        "prediction"+i,
 
-          `<span class="${color}">
-          1-3H Prediction :
-          ${d.predictionText}
-          </span>`
-        );
+        `<span class="${color}">
+        1-3H Prediction :
+        ${d.predictionText}
+        </span>`
+      );
 
-        if (
-          d.ratio <= 1
-        ) {
-
-          setText(
-            "target" + index,
-            ""
-          );
-
-        } else {
-
-          setText(
-
-            "target" + index,
-
-            "Target : " +
-            d.targetPrice
-          );
-        }
+      if(
+        d.ratio <= 1
+      ){
 
         setText(
+          "target"+i,
+          ""
+        );
 
-          "update" + index,
+      }else{
 
-          "Update : " +
-          data.updateTime
+        setText(
+          "target"+i,
+          "Target : " +
+          d.targetPrice
         );
       }
-    );
 
-  } catch (e) {
+      setText(
+        "update"+i,
+        "Update : " +
+        data.updateTime
+      );
+
+    });
+
+  }catch(e){
 
     console.log(e);
+
   }
+}
+
+for(
+  let i=1;
+  i<=6;
+  i++
+){
+
+  buildCard(i);
 }
 
 updateAll();
