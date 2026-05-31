@@ -1,120 +1,42 @@
-body{
-    margin:0;
-    background:#000;
-    color:#fff;
-    font-family:Arial,sans-serif;
-    overflow-x:hidden;
-}
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-.title{
-    text-align:center;
-    font-size:58px;
-    font-weight:bold;
-    color:#00ffff;
-    margin-top:15px;
-}
+<title>6格統計</title>
 
-#hkClock{
-    text-align:center;
-    color:#ffff00;
-    font-size:38px;
-    font-weight:bold;
-    margin-top:10px;
-    margin-bottom:40px;
-}
+<link rel="stylesheet" href="style.css">
 
-.top-row{
-    display:flex;
-    justify-content:space-around;
-    align-items:flex-start;
-}
+</head>
 
-.bottom-row{
-    display:flex;
-    justify-content:center;
-    gap:320px;
-    margin-top:180px;
-}
+<body>
 
-.coin-box{
-    width:23%;
-    text-align:center;
-}
+<div class="title">
+6格統計
+</div>
 
-.coin-title{
-    font-size:16px;
-    color:#aaaaaa;
-    margin-bottom:10px;
-}
+<div id="hkClock">
+00:00:00
+</div>
 
-.symbol{
-    font-size:22px;
-    color:#00ffff;
-    font-weight:bold;
-    margin-bottom:12px;
-}
+<div class="top-row">
 
-.price{
-    font-size:48px;
-    font-weight:bold;
-    color:#ffffff;
-    margin-top:10px;
-}
+<div id="coin1" class="coin-box"></div>
+<div id="coin2" class="coin-box"></div>
+<div id="coin3" class="coin-box"></div>
+<div id="coin4" class="coin-box"></div>
 
-.move{
-    font-size:24px;
-    color:#00ffff;
-    font-weight:bold;
-    margin-top:10px;
-}
+</div>
 
-.pic{
-    font-size:22px;
-    font-weight:bold;
-    margin-top:12px;
-    line-height:1.4;
-}
+<div class="bottom-row">
 
-.up{
-    color:#00ff99;
-}
+<div id="coin5" class="coin-box"></div>
+<div id="coin6" class="coin-box"></div>
 
-.down{
-    color:#ff5555;
-}
+</div>
 
-.normal{
-    color:#ffff00;
-}
+<script src="script.js"></script>
 
-@media screen and (max-width:1200px){
-
-    .top-row{
-        flex-direction:column;
-        align-items:center;
-        gap:40px;
-    }
-
-    .bottom-row{
-        flex-direction:column;
-        align-items:center;
-        gap:40px;
-        margin-top:40px;
-    }
-
-    .coin-box{
-        width:95%;
-    }
-
-    .title{
-        font-size:34px;
-    }
-
-    #hkClock{
-        font-size:24px;
-    }
-
-    .price{
-        font-size:30px;
-    }
-}
+</body>
+</html>
