@@ -1,241 +1,210 @@
 body{
-
     margin:0;
-
-    padding:20px;
-
-    background:#111;
-
-    color:#ffffff;
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
+    background:#000;
+    color:#00ffff;
+    font-family:Arial;
+    overflow-x:hidden;
 }
 
-.title{
-
+.main-title{
     text-align:center;
-
-    font-size:32px;
-
+    font-size:56px;
     font-weight:bold;
-
-    margin-bottom:12px;
-
+    margin-top:35px;
+    color:#00f7ff;
 }
 
-.clock{
-
-    text-align:center;
-
-    font-size:22px;
-
-    margin-bottom:20px;
-
-    color:#00ff88;
-
-    font-weight:bold;
-
-}
-
-.top-row{
-
-    display:flex;
-
-    gap:12px;
-
-    margin-bottom:12px;
-
-}
-
-.bottom-row{
-
-    display:flex;
-
-    gap:12px;
-
-}
-
-.coin-box{
-
-    flex:1;
-
-    background:#1b1b1b;
-
+.prediction-wrapper{
+    width:1100px;
+    margin:30px auto;
     border:1px solid #333;
-
-    border-radius:12px;
-
-    padding:12px;
-
-    min-height:220px;
-
-    box-sizing:border-box;
-
-}
-
-.coin-title{
-
-    text-align:center;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    margin-bottom:10px;
-
-    color:#00ff88;
-
-}
-
-.input-row{
-
     display:flex;
-
-    gap:6px;
-
-    margin-bottom:10px;
-
+    justify-content:space-between;
+    padding:35px;
+    box-sizing:border-box;
 }
 
-.coin-input{
-
-    flex:1;
-
-    background:#222;
-
-    color:#fff;
-
-    border:1px solid #444;
-
-    border-radius:6px;
-
-    padding:8px;
-
-    font-size:15px;
-
+.prediction-box{
+    width:420px;
 }
 
-.load-btn{
-
-    background:#008844;
-
-    color:#fff;
-
-    border:none;
-
-    border-radius:6px;
-
-    padding:8px 12px;
-
-    cursor:pointer;
-
+.box-title{
+    text-align:center;
+    font-size:38px;
+    margin-bottom:25px;
+    color:#00ffff;
     font-weight:bold;
-
 }
 
-.load-btn:hover{
-
-    background:#00aa55;
-
+.grid-row{
+    display:flex;
+    align-items:center;
+    margin-bottom:22px;
 }
 
-.price{
-
-    font-size:20px;
-
+.label{
+    width:90px;
+    font-size:32px;
     font-weight:bold;
-
-    margin-top:10px;
-
-    margin-bottom:10px;
-
-    word-break:break-word;
-
-}
-
-.move{
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    margin-bottom:10px;
-
-}
-
-.prediction{
-
-    font-size:17px;
-
-    line-height:1.5;
-
-    word-break:break-word;
-
 }
 
 .up{
-
-    color:#00ff66;
-
-    font-weight:bold;
-
+    color:#00ff99;
 }
 
 .down{
-
-    color:#ff5555;
-
-    font-weight:bold;
-
+    color:#ff4455;
 }
 
-.normal{
+.cells{
+    display:flex;
+    gap:10px;
+}
 
-    color:#ffd54a;
+.cell{
+    width:34px;
+    height:34px;
+    border:1px solid #666;
+    background:#222;
+}
 
+.fill-green{
+    background:#00ff99;
+}
+
+.fill-red{
+    background:#ff4455;
+}
+
+.middle-divider{
+    color:#999;
+    font-size:60px;
+    display:flex;
+    align-items:center;
+}
+
+.major-alert{
+    text-align:center;
+    margin-top:10px;
+    font-size:30px;
+    color:#00ffaa;
     font-weight:bold;
+}
 
+.short-predict{
+    text-align:center;
+    margin-top:18px;
+    font-size:24px;
+    color:#00eaff;
+    font-weight:bold;
+}
+
+.btc-price{
+    text-align:center;
+    margin-top:24px;
+    font-size:58px;
+    color:#ff5555;
+    font-weight:bold;
+}
+
+.btc-volume{
+    text-align:center;
+    margin-top:8px;
+    font-size:20px;
+    color:#ffffff;
+}
+
+.macro-direction{
+    text-align:center;
+    margin-top:28px;
+    font-size:52px;
+    font-weight:bold;
+    color:yellow;
+}
+
+.macro-reason{
+    text-align:center;
+    margin-top:10px;
+    font-size:22px;
+    color:#cccccc;
+}
+
+.global-data{
+    width:100%;
+    margin-top:25px;
+    padding-bottom:50px;
+}
+
+.global-item{
+    text-align:center;
+    font-size:28px;
+    margin-top:18px;
+    font-weight:bold;
+}
+
+.dxy{
+    color:#ff5555;
+}
+
+.dow{
+    color:#00ffaa;
+}
+
+.us10y{
+    color:#00ffaa;
+}
+
+.vix{
+    color:#ff5577;
+}
+
+.gold{
+    color:#ff4444;
+}
+
+.fear{
+    color:#ffff00;
 }
 
 @media screen and (max-width:1200px){
 
-    .top-row{
-
-        flex-wrap:wrap;
-
+    .main-title{
+        font-size:28px;
+        padding:10px;
     }
 
-    .bottom-row{
-
-        flex-wrap:wrap;
-
-    }
-
-    .coin-box{
-
-        min-width:300px;
-
-    }
-
-}
-
-@media screen and (max-width:768px){
-
-    .top-row,
-    .bottom-row{
-
+    .prediction-wrapper{
+        width:95%;
         flex-direction:column;
-
+        gap:50px;
     }
 
-    .coin-box{
-
+    .prediction-box{
         width:100%;
-
     }
 
+    .middle-divider{
+        display:none;
+    }
+
+    .box-title{
+        font-size:26px;
+    }
+
+    .label{
+        font-size:22px;
+        width:70px;
+    }
+
+    .btc-price{
+        font-size:36px;
+    }
+
+    .macro-direction{
+        font-size:30px;
+    }
+
+    .global-item{
+        font-size:22px;
+    }
 }
