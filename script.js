@@ -23,8 +23,7 @@ function loadCoin(index){
   return (
     localStorage.getItem(
       "coin" + index
-    )
-    ||
+    ) ||
     DEFAULT_COINS[index - 1]
   );
 }
@@ -49,8 +48,8 @@ function buildCard(index){
 
     <input
       id="symbol${index}"
-      value="${coin}"
       type="text"
+      value="${coin}"
     >
 
     <button
@@ -91,9 +90,7 @@ function setText(id,text){
     document.getElementById(id);
 
   if(el){
-
-    el.textContent =
-      text;
+    el.textContent = text;
   }
 }
 
@@ -103,10 +100,21 @@ function setHTML(id,html){
     document.getElementById(id);
 
   if(el){
-
-    el.innerHTML =
-      html;
+    el.innerHTML = html;
   }
+}
+
+function getCoinByIndex(data,index){
+
+  if(
+    !data ||
+    !data.coins ||
+    !data.coins[index]
+  ){
+    return null;
+  }
+
+  return data.coins[index];
 }
 
 async function fetchAll(){
@@ -121,55 +129,60 @@ async function fetchAll(){
   return await res.json();
 }
 
-async function updateCard(
+function updateCard(
   index,
-  data
+  coin,
+  updateTime
 ){
+
+  if(!coin){
+    return;
+  }
 
   setText(
     "price" + index,
-    data.pair +
+    coin.pair +
     " : " +
-    data.price
+    coin.price
   );
 
   const color =
-    data.bullish
-    ? "up"
-    : "down";
+    coin.bullish
+      ? "up"
+      : "down";
 
   setHTML(
 
     "prediction" + index,
 
     `<span class="${color}">
-    1-3H Prediction :
-    ${data.predictionText}
+      1-3H Prediction :
+      ${coin.predictionText}
     </span>`
   );
 
   if(
-    data.ratio <= 1
+    coin.ratio > 1
   ){
 
     setText(
       "target" + index,
-      ""
+      "Target : " +
+      coin.targetPrice
     );
 
   }else{
 
     setText(
       "target" + index,
-      "Target : " +
-      data.targetPrice
+      ""
     );
   }
 
   setText(
     "update" + index,
     "Update : " +
-    data.updateTime
+    updateTime
   );
 }
 
@@ -181,58 +194,69 @@ async function updateAll(){
       await fetchAll();
 
     if(
-      !data.success
-      ||
+      !data.success ||
       !data.coins
     ){
       return;
     }
 
-    data.coins.forEach(
+    for(
+      let i = 1;
+      i <= 6;
+      i++
+    ){
 
-      (coin,idx)=>{
-
-        updateCard(
-          idx + 1,
-          {
-            ...coin,
-            updateTime:
-            data.updateTime
-          }
+      const coin =
+        getCoinByIndex(
+          data,
+          i - 1
         );
-      }
-    );
+
+      updateCard(
+        i,
+        coin,
+        data.updateTime
+      );
+    }
 
   }catch(e){
 
-    console.log(e);
+    console.log(
+      "updateAll error",
+      e
+    );
   }
 }
 
-async function reloadCoin(index){
+function reloadCoin(index){
 
-  const symbol =
-    document
-      .getElementById(
-        "symbol" + index
-      )
-      .value
+  const input =
+    document.getElementById(
+      "symbol" + index
+    );
+
+  if(!input){
+    return;
+  }
+
+  const coin =
+    input.value
       .trim()
       .toUpperCase();
 
-  if(!symbol){
+  if(!coin){
     return;
   }
 
   saveCoin(
     index,
-    symbol
+    coin
   );
 
   alert(
-    "Worker v2目前固定6 Coin。\n\n" +
     "已儲存：" +
-    symbol
+    coin +
+    "\n\n注意：目前 Worker v2 固定輸出 BTC / HOME / TON / SUI / SOL / IOTA"
   );
 }
 
