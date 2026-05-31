@@ -1,149 +1,5 @@
 const WORKER_URL =
-"https://withered-shape-2779.jacky12345cheung.workers.dev/";
-
-const defaultCoins = [
-  "BTC",
-  "HOME",
-  "TON",
-  "SUI",
-  "SOL",
-  "IOTA"
-];
-
-function loadSavedCoins() {
-
-  const arr = [];
-
-  for (let i = 1; i <= 6; i++) {
-
-    const coin =
-      localStorage.getItem(
-        "coin" + i
-      );
-
-    arr.push(
-      coin || defaultCoins[i - 1]
-    );
-  }
-
-  return arr;
-}
-
-function saveCoin(index, coin) {
-
-  localStorage.setItem(
-    "coin" + index,
-    coin.toUpperCase()
-  );
-}
-
-function buildCard(index) {
-
-  const container =
-    document.getElementById(
-      "coin" + index
-    );
-
-  container.innerHTML = `
-    <div class="card-title">
-      COIN ${index}
-    </div>
-
-    <div class="input-row">
-
-      <input
-      id="input${index}"
-      type="text">
-
-      <button
-      onclick="reloadCoin(${index})">
-
-      LOAD
-
-      </button>
-
-    </div>
-
-    <div
-    id="price${index}"
-    class="price">
-
-    Loading...
-
-    </div>
-
-    <div
-    id="prediction${index}"
-    class="prediction">
-
-    ...
-
-    </div>
-
-    <div
-    id="target${index}"
-    class="target">
-
-    ...
-
-    </div>
-
-    <div
-    id="update${index}"
-    class="update">
-
-    ...
-
-    </div>
-  `;
-}
-
-function initCards() {
-
-  for (
-    let i = 1;
-    i <= 6;
-    i++
-  ) {
-
-    buildCard(i);
-  }
-
-  const coins =
-    loadSavedCoins();
-
-  for (
-    let i = 1;
-    i <= 6;
-    i++
-  ) {
-
-    document
-      .getElementById(
-        "input" + i
-      )
-      .value =
-      coins[i - 1];
-  }
-}
-
-async function fetchCoin(symbol) {
-
-  const url =
-    WORKER_URL +
-    "?symbol=" +
-    encodeURIComponent(symbol) +
-    "&t=" +
-    Date.now();
-
-  const res =
-    await fetch(url);
-
-  const data =
-    await res.json();
-
-  return data;
-}
+"https://wispy-dawn-5bf8.jacky12345cheung.workers.dev/";
 
 function setText(id, text) {
 
@@ -167,143 +23,96 @@ function setHTML(id, html) {
   }
 }
 
-async function updateCoin(index) {
+async function fetchAllCoins() {
 
-  try {
-
-    const symbol =
-      document
-        .getElementById(
-          "input" + index
-        )
-        .value
-        .trim()
-        .toUpperCase();
-
-    if (!symbol) {
-      return;
-    }
-
-    const d =
-      await fetchCoin(symbol);
-
-    if (!d.success) {
-
-      setText(
-        "price" + index,
-        "Invalid Coin"
-      );
-
-      setText(
-        "prediction" + index,
-        d.error || ""
-      );
-
-      return;
-    }
-
-    setText(
-      "price" + index,
-      d.symbol +
-      " : " +
-      d.price
+  const res =
+    await fetch(
+      WORKER_URL +
+      "?t=" +
+      Date.now()
     );
 
-    let color = "up";
-
-    if (!d.bullish) {
-      color = "down";
-    }
-
-    setHTML(
-      "prediction" + index,
-
-      `<span class="${color}">
-      1-3H Prediction :
-      ${d.predictionText}
-      </span>`
-    );
-
-    if (d.ratio <= 1) {
-
-      setText(
-        "target" + index,
-        ""
-      );
-
-    } else {
-
-      setText(
-        "target" + index,
-        "Target : " +
-        d.targetPrice
-      );
-    }
-
-    setText(
-      "update" + index,
-      "Update : " +
-      d.updateTime
-    );
-
-  }
-  catch (e) {
-
-    setText(
-      "price" + index,
-      "Error"
-    );
-
-    setText(
-      "prediction" + index,
-      e.message
-    );
-
-    setText(
-      "target" + index,
-      ""
-    );
-  }
+  return await res.json();
 }
 
 async function updateAll() {
 
-  for (
-    let i = 1;
-    i <= 6;
-    i++
-  ) {
+  try {
 
-    await updateCoin(i);
+    const data =
+      await fetchAllCoins();
+
+    if (
+      !data.success ||
+      !data.coins
+    ) {
+
+      return;
+    }
+
+    data.coins.forEach(
+      (d, idx) => {
+
+        const index =
+          idx + 1;
+
+        setText(
+          "price" + index,
+          d.pair +
+          " : " +
+          d.price
+        );
+
+        let color =
+          d.bullish
+          ? "up"
+          : "down";
+
+        setHTML(
+
+          "prediction" + index,
+
+          `<span class="${color}">
+          1-3H Prediction :
+          ${d.predictionText}
+          </span>`
+        );
+
+        if (
+          d.ratio <= 1
+        ) {
+
+          setText(
+            "target" + index,
+            ""
+          );
+
+        } else {
+
+          setText(
+
+            "target" + index,
+
+            "Target : " +
+            d.targetPrice
+          );
+        }
+
+        setText(
+
+          "update" + index,
+
+          "Update : " +
+          data.updateTime
+        );
+      }
+    );
+
+  } catch (e) {
+
+    console.log(e);
   }
 }
-
-function reloadCoin(index) {
-
-  const coin =
-    document
-      .getElementById(
-        "input" + index
-      )
-      .value
-      .trim()
-      .toUpperCase();
-
-  if (!coin) {
-    return;
-  }
-
-  saveCoin(
-    index,
-    coin
-  );
-
-  updateCoin(
-    index
-  );
-}
-
-initCards();
 
 updateAll();
 
