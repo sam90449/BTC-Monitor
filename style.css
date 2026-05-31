@@ -1,8 +1,8 @@
 body{
     margin:0;
     padding:0;
-    background:#000000;
-    color:#ffffff;
+    background:#000;
+    color:#fff;
     font-family:Arial,Helvetica,sans-serif;
     overflow-x:hidden;
 }
@@ -10,7 +10,6 @@ body{
 .page-wrap{
     width:100%;
     min-height:100vh;
-    padding-bottom:80px;
 }
 
 .title{
@@ -19,34 +18,45 @@ body{
     font-weight:bold;
     color:#ffffff;
     margin-top:10px;
-    margin-bottom:8px;
 }
 
 #hkClock{
     text-align:center;
+    color:#ffff00;
     font-size:32px;
     font-weight:bold;
-    color:#ffff00;
-    margin-bottom:40px;
+    margin-top:8px;
+    margin-bottom:30px;
 }
 
 .top-row{
     display:flex;
     justify-content:space-around;
     align-items:flex-start;
-    width:100%;
+    flex-wrap:wrap;
 }
 
 .bottom-row{
     display:flex;
     justify-content:center;
     align-items:flex-start;
-    gap:280px;
-    margin-top:90px;
+    gap:220px;
+    margin-top:80px;
+    flex-wrap:wrap;
 }
 
 .coin-box{
+
     width:24%;
+
+    min-width:280px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
     text-align:center;
 }
 
@@ -57,35 +67,67 @@ body{
     margin-bottom:2px;
 }
 
-.symbol{
-    font-size:22px;
-    font-weight:bold;
-    color:#ffffff;
-    margin-bottom:2px;
+.input-row{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:8px;
+
+    margin-top:6px;
+
+    margin-bottom:12px;
+}
+
+.input-row input{
+
+    width:110px;
+
+    text-align:center;
+
+    font-size:16px;
+}
+
+.input-row button{
+
+    height:28px;
+
+    padding:0 10px;
+
+    font-size:14px;
+
+    cursor:pointer;
 }
 
 .price{
-    font-size:42px;
+
+    font-size:30px;
+
     font-weight:bold;
+
     color:#ffffff;
-    margin-top:0;
-    margin-bottom:6px;
+
     white-space:nowrap;
-    overflow:hidden;
+
+    overflow:visible;
+
+    margin-top:5px;
+
+    margin-bottom:8px;
 }
 
 .move{
-    font-size:24px;
+    font-size:22px;
     font-weight:bold;
-    margin-top:6px;
-    margin-bottom:4px;
+    margin-top:5px;
+    margin-bottom:6px;
 }
 
 .pic{
-    font-size:20px;
+    font-size:18px;
     font-weight:bold;
     line-height:1.4;
-    margin-top:4px;
 }
 
 .up{
@@ -98,14 +140,6 @@ body{
 
 .normal{
     color:#ffff00;
-}
-
-@media screen and (max-width:1400px){
-
-    .price{
-        font-size:34px;
-    }
-
 }
 
 @media screen and (max-width:1200px){
@@ -125,6 +159,7 @@ body{
 
     .coin-box{
         width:95%;
+        min-width:0;
     }
 
     .title{
@@ -136,14 +171,6 @@ body{
     }
 
     .price{
-        font-size:30px;
-    }
-
-    .move{
-        font-size:22px;
-    }
-
-    .pic{
-        font-size:18px;
+        font-size:24px;
     }
 }
