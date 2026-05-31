@@ -3,70 +3,108 @@ const WORKER_URL =
 
 const DEFAULT_COINS = [
   "BTC",
-  "HOME",
   "TON",
   "SUI",
+  "HOME",
   "SOL",
   "IOTA"
 ];
 
 function saveCoin(index, coin){
-  localStorage.setItem("coin" + index, coin.toUpperCase());
+
+  localStorage.setItem(
+    "coin" + index,
+    coin.toUpperCase()
+  );
 }
 
 function loadCoin(index){
-  return localStorage.getItem("coin" + index) ||
-         DEFAULT_COINS[index - 1];
+
+  return (
+    localStorage.getItem(
+      "coin" + index
+    ) ||
+    DEFAULT_COINS[index - 1]
+  );
 }
 
 function buildCard(index){
 
-  const coin = loadCoin(index);
+  const coin =
+    loadCoin(index);
 
   const el =
-    document.getElementById("coin" + index);
+    document.getElementById(
+      "coin" + index
+    );
 
   el.innerHTML = `
-  <div class="card-title">
+
+  <div class="coin-title">
     COIN ${index}
   </div>
 
   <div class="input-row">
+
     <input
       id="symbol${index}"
-      type="text"
-      value="${coin}">
+      value="${coin}"
+    >
 
-    <button onclick="reloadCoin(${index})">
+    <button
+      onclick="reloadCoin(${index})">
       LOAD
     </button>
+
   </div>
 
-  <div class="price" id="price${index}">
+  <div
+    class="symbol"
+    id="symbolText${index}">
+    ${coin}
+  </div>
+
+  <div
+    class="price"
+    id="price${index}">
     Loading...
   </div>
 
-  <div class="prediction" id="prediction${index}">
-    ...
+  <div
+    class="move"
+    id="move${index}">
   </div>
 
-  <div class="target" id="target${index}"></div>
+  <div
+    class="pic"
+    id="prediction${index}">
+  </div>
 
-  <div class="update" id="update${index}"></div>
+  <div
+    class="target"
+    id="target${index}">
+  </div>
+
   `;
 }
 
 function setText(id,text){
-  const el = document.getElementById(id);
+
+  const el =
+    document.getElementById(id);
+
   if(el){
-    el.textContent = text;
+    el.textContent=text;
   }
 }
 
 function setHTML(id,html){
-  const el = document.getElementById(id);
+
+  const el =
+    document.getElementById(id);
+
   if(el){
-    el.innerHTML = html;
+    el.innerHTML=html;
   }
 }
 
@@ -97,8 +135,7 @@ async function fetchAll(){
 
 function updateCard(
   index,
-  coin,
-  updateTime
+  coin
 ){
 
   if(!coin){
@@ -106,88 +143,84 @@ function updateCard(
   }
 
   setText(
-    "price" + index,
-    coin.pair + " : " + coin.price
+    "symbolText"+index,
+    coin.pair
   );
 
-  const picText =
+  setText(
+    "price"+index,
+    coin.price
+  );
+
+  let arrow="↓";
+  let moveText="下跌";
+
+  if(coin.bullish){
+
+    arrow="↑";
+    moveText="上升";
+
+  }
+
+  setText(
+    "move"+index,
+    arrow +
+    " " +
+    moveText +
+    " " +
+    (
+      coin.finalPercent ??
+      ""
+    )
+  );
+
+  const txt =
     String(
       coin.predictionText || ""
     );
 
-  let cls = "down";
+  let cls="down";
 
-  if(picText.includes("普通勝算率")){
-    cls = "normal";
+  if(
+    txt.includes("普通")
+  ){
+    cls="normal";
   }
 
   if(
-    picText.includes("中高勝算率") ||
-    picText.includes("高勝算率") ||
-    picText.includes("極高勝算率")
+    txt.includes("中高") ||
+    txt.includes("高勝算率") ||
+    txt.includes("極高")
   ){
-    cls = "up";
-  }
-
-  let arrow = "↓";
-
-  if(
-    coin.bullish ||
-    cls === "up"
-  ){
-    arrow = "↑";
+    cls="up";
   }
 
   setHTML(
-    "prediction" + index,
+
+    "prediction"+index,
+
     `<span class="${cls}">
-      PIC :
-      ${arrow} ${picText}
-      <br>
-      Ratio : ${coin.ratio}
+    Pic : ${txt}
     </span>`
   );
 
   if(
-    Number(coin.ratio) <= 1
+    Number(coin.ratio) > 1
   ){
 
     setText(
-      "target" + index,
-      ""
+      "target"+index,
+      "Target : " +
+      coin.targetPrice
     );
 
   }else{
 
-    let target =
-      Number(
-        coin.targetPrice
-      );
-
-    let text;
-
-    if(
-      coin.pair &&
-      coin.pair.startsWith("BTC")
-    ){
-      text =
-        target.toFixed(2);
-    }else{
-      text =
-        target.toFixed(4);
-    }
-
     setText(
-      "target" + index,
-      "Target : " + text
+      "target"+index,
+      ""
     );
   }
-
-  setText(
-    "update" + index,
-    "Update : " +
-    updateTime
-  );
 }
 
 async function updateAll(){
@@ -205,71 +238,89 @@ async function updateAll(){
     }
 
     for(
-      let i = 1;
-      i <= 6;
+      let i=1;
+      i<=6;
       i++
     ){
 
       const coin =
         getCoinByIndex(
           data,
-          i - 1
+          i-1
         );
 
       updateCard(
         i,
-        coin,
-        data.updateTime
+        coin
       );
     }
 
   }catch(e){
 
-    console.log(
-      "updateAll error",
-      e
-    );
+    console.log(e);
+
   }
 }
 
 function reloadCoin(index){
 
-  const input =
-    document.getElementById(
-      "symbol" + index
-    );
-
-  if(!input){
-    return;
-  }
-
   const coin =
-    input.value
-      .trim()
-      .toUpperCase();
+    document
+    .getElementById(
+      "symbol"+index
+    )
+    .value
+    .trim()
+    .toUpperCase();
 
-  if(!coin){
-    return;
-  }
-
-  saveCoin(index, coin);
+  saveCoin(
+    index,
+    coin
+  );
 
   alert(
     "已儲存：" +
-    coin +
-    "\\n\\n目前 Worker v2 固定輸出 BTC / HOME / TON / SUI / SOL / IOTA"
+    coin
+  );
+}
+
+function updateClock(){
+
+  const now =
+    new Date();
+
+  const hk =
+    now.toLocaleString(
+      "zh-HK",
+      {
+        timeZone:
+        "Asia/Hong_Kong"
+      }
+    );
+
+  setText(
+    "hkClock",
+    hk
   );
 }
 
 for(
-  let i = 1;
-  i <= 6;
+  let i=1;
+  i<=6;
   i++
 ){
+
   buildCard(i);
 }
 
+updateClock();
+
 updateAll();
+
+setInterval(
+  updateClock,
+  1000
+);
 
 setInterval(
   updateAll,
