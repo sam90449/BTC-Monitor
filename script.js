@@ -33,39 +33,39 @@ function setHTML(id,html){
 function buildCard(index){
 
     const coin =
-        DEFAULT_COINS[index-1];
+        DEFAULT_COINS[index - 1];
 
     const el =
         document.getElementById(
-            "coin"+index
+            "coin" + index
         );
 
-    el.innerHTML=`
+    el.innerHTML = `
 
         <div class="coin-title">
             COIN${index}
         </div>
 
         <div
-            class="symbol"
-            id="symbol${index}">
+        class="symbol"
+        id="symbol${index}">
             ${coin}
         </div>
 
         <div
-            class="price"
-            id="price${index}">
+        class="price"
+        id="price${index}">
             Loading...
         </div>
 
         <div
-            class="move"
-            id="move${index}">
+        class="move"
+        id="move${index}">
         </div>
 
         <div
-            class="pic"
-            id="prediction${index}">
+        class="pic"
+        id="prediction${index}">
         </div>
 
     `;
@@ -86,73 +86,117 @@ function getCoinByIndex(data,index){
 
 async function fetchAll(){
 
-    const res =
+    const response =
         await fetch(
             WORKER_URL +
             "?t=" +
             Date.now()
         );
 
-    return await res.json();
+    return await response.json();
 }
 
-function formatPrice(v){
+function formatPrice(value){
 
-    const n = Number(v);
+    const n =
+        Number(value);
 
-    if(isNaN(n)){
-        return v;
+    if(
+        Number.isNaN(n)
+    ){
+        return String(value || "");
     }
 
     return n.toFixed(4);
 }
 
-function formatPercent(v){
+function formatPercent(value){
 
-    const n = Number(v);
+    const n =
+        Number(value);
 
-    if(isNaN(n)){
+    if(
+        Number.isNaN(n)
+    ){
         return "0.00%";
     }
 
-    return n.toFixed(2) + "%";
+    return (
+        n.toFixed(2) +
+        "%"
+    );
 }
 
-function updateCard(index,coin){
+function getPredictionClass(txt){
+
+    if(
+        txt.includes("極高") ||
+        txt.includes("高勝算率") ||
+        txt.includes("中高")
+    ){
+        return "up";
+    }
+
+    if(
+        txt.includes("普通")
+    ){
+        return "normal";
+    }
+
+    return "down";
+}
+
+function updateCard(
+    index,
+    coin
+){
 
     if(!coin){
         return;
     }
 
-    setText(
-        "price"+index,
-        coin.pair +
-        " : " +
+    const pair =
+        String(
+            coin.pair || ""
+        );
+
+    const price =
         formatPrice(
             coin.price
-        )
+        );
+
+    setText(
+        "price" + index,
+        pair +
+        " : " +
+        price
     );
+
+    const bullish =
+        Boolean(
+            coin.bullish
+        );
 
     const percent =
         formatPercent(
             coin.finalPercent || 0
         );
 
-    if(coin.bullish){
+    if(bullish){
 
         setHTML(
-            "move"+index,
+            "move" + index,
             `<span class="up">
-            ↑ 上升 ${percent}
+                ↑ 上升 ${percent}
             </span>`
         );
 
     }else{
 
         setHTML(
-            "move"+index,
+            "move" + index,
             `<span class="down">
-            ↓ 下跌 ${percent}
+                ↓ 下跌 ${percent}
             </span>`
         );
 
@@ -163,15 +207,10 @@ function updateCard(index,coin){
             coin.predictionText || ""
         );
 
-    let cls="down";
-
-    if(
-        txt.includes("極高") ||
-        txt.includes("高勝算率") ||
-        txt.includes("中高")
-    ){
-        cls="up";
-    }
+    const cls =
+        getPredictionClass(
+            txt
+        );
 
     let picText =
         "Pic : " +
@@ -184,16 +223,17 @@ function updateCard(index,coin){
     ){
 
         picText +=
-        `<br>(Target:${formatPrice(
-            coin.targetPrice
-        )})`;
-
+            "<br>(Target:" +
+            formatPrice(
+                coin.targetPrice
+            ) +
+            ")";
     }
 
     setHTML(
-        "prediction"+index,
+        "prediction" + index,
         `<span class="${cls}">
-        ${picText}
+            ${picText}
         </span>`
     );
 }
@@ -206,6 +246,7 @@ async function updateAll(){
             await fetchAll();
 
         if(
+            !data ||
             !data.success ||
             !data.coins
         ){
@@ -213,23 +254,29 @@ async function updateAll(){
         }
 
         for(
-            let i=1;
-            i<=6;
+            let i = 1;
+            i <= 6;
             i++
         ){
 
-            updateCard(
-                i,
+            const coin =
                 getCoinByIndex(
                     data,
-                    i-1
-                )
+                    i - 1
+                );
+
+            updateCard(
+                i,
+                coin
             );
         }
 
-    }catch(e){
+    }catch(error){
 
-        console.log(e);
+        console.log(
+            "updateAll error",
+            error
+        );
 
     }
 }
@@ -276,13 +323,17 @@ function updateClock(){
 
     setText(
         "hkClock",
-        `${hh}:${mm}:${ss}`
+        hh +
+        ":" +
+        mm +
+        ":" +
+        ss
     );
 }
 
 for(
-    let i=1;
-    i<=6;
+    let i = 1;
+    i <= 6;
     i++
 ){
     buildCard(i);
