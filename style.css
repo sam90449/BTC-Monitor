@@ -1,210 +1,257 @@
 body{
-    margin:0;
-    background:#000;
-    color:#00ffff;
-    font-family:Arial;
-    overflow-x:hidden;
+
+margin:0;
+
+background:#000;
+
+color:#ffffff;
+
+font-family:Arial;
+
+overflow-x:hidden;
+
 }
 
-.main-title{
-    text-align:center;
-    font-size:56px;
-    font-weight:bold;
-    margin-top:35px;
-    color:#00f7ff;
+.title{
+
+text-align:center;
+
+font-size:60px;
+
+font-weight:bold;
+
+color:#00ffff;
+
+margin-top:20px;
+
 }
 
-.prediction-wrapper{
-    width:1100px;
-    margin:30px auto;
-    border:1px solid #333;
-    display:flex;
-    justify-content:space-between;
-    padding:35px;
-    box-sizing:border-box;
+#hkClock{
+
+text-align:center;
+
+font-size:34px;
+
+font-weight:bold;
+
+color:yellow;
+
+margin-top:10px;
+
+margin-bottom:40px;
+
 }
 
-.prediction-box{
-    width:420px;
+.top-row{
+
+display:flex;
+
+justify-content:space-around;
+
+align-items:flex-start;
+
+padding:0 20px;
+
 }
 
-.box-title{
-    text-align:center;
-    font-size:38px;
-    margin-bottom:25px;
-    color:#00ffff;
-    font-weight:bold;
+.bottom-row{
+
+display:flex;
+
+justify-content:center;
+
+gap:180px;
+
+margin-top:80px;
+
 }
 
-.grid-row{
-    display:flex;
-    align-items:center;
-    margin-bottom:22px;
+.coin-box{
+
+width:320px;
+
+text-align:center;
+
 }
 
-.label{
-    width:90px;
-    font-size:32px;
-    font-weight:bold;
+.coin-title{
+
+font-size:30px;
+
+font-weight:bold;
+
+color:#00ffff;
+
+margin-bottom:15px;
+
+}
+
+.input-row{
+
+display:flex;
+
+justify-content:center;
+
+gap:8px;
+
+margin-bottom:12px;
+
+}
+
+.input-row input{
+
+width:120px;
+
+height:34px;
+
+font-size:18px;
+
+background:#111;
+
+border:1px solid #555;
+
+color:#fff;
+
+text-align:center;
+
+}
+
+.input-row button{
+
+height:38px;
+
+padding:0 15px;
+
+background:#00aa55;
+
+border:none;
+
+color:#fff;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+.symbol{
+
+font-size:28px;
+
+font-weight:bold;
+
+color:#00ffff;
+
+margin-top:8px;
+
+}
+
+.price{
+
+font-size:34px;
+
+font-weight:bold;
+
+color:#ffffff;
+
+margin-top:15px;
+
+}
+
+.move{
+
+font-size:22px;
+
+font-weight:bold;
+
+color:#00ffff;
+
+margin-top:10px;
+
+}
+
+.pic{
+
+font-size:22px;
+
+font-weight:bold;
+
+margin-top:10px;
+
+}
+
+.target{
+
+font-size:18px;
+
+color:#ffff66;
+
+margin-top:8px;
+
 }
 
 .up{
-    color:#00ff99;
+
+color:#00ff99;
+
 }
 
 .down{
-    color:#ff4455;
+
+color:#ff5555;
+
 }
 
-.cells{
-    display:flex;
-    gap:10px;
-}
+.normal{
 
-.cell{
-    width:34px;
-    height:34px;
-    border:1px solid #666;
-    background:#222;
-}
+color:#ffff00;
 
-.fill-green{
-    background:#00ff99;
-}
-
-.fill-red{
-    background:#ff4455;
-}
-
-.middle-divider{
-    color:#999;
-    font-size:60px;
-    display:flex;
-    align-items:center;
-}
-
-.major-alert{
-    text-align:center;
-    margin-top:10px;
-    font-size:30px;
-    color:#00ffaa;
-    font-weight:bold;
-}
-
-.short-predict{
-    text-align:center;
-    margin-top:18px;
-    font-size:24px;
-    color:#00eaff;
-    font-weight:bold;
-}
-
-.btc-price{
-    text-align:center;
-    margin-top:24px;
-    font-size:58px;
-    color:#ff5555;
-    font-weight:bold;
-}
-
-.btc-volume{
-    text-align:center;
-    margin-top:8px;
-    font-size:20px;
-    color:#ffffff;
-}
-
-.macro-direction{
-    text-align:center;
-    margin-top:28px;
-    font-size:52px;
-    font-weight:bold;
-    color:yellow;
-}
-
-.macro-reason{
-    text-align:center;
-    margin-top:10px;
-    font-size:22px;
-    color:#cccccc;
-}
-
-.global-data{
-    width:100%;
-    margin-top:25px;
-    padding-bottom:50px;
-}
-
-.global-item{
-    text-align:center;
-    font-size:28px;
-    margin-top:18px;
-    font-weight:bold;
-}
-
-.dxy{
-    color:#ff5555;
-}
-
-.dow{
-    color:#00ffaa;
-}
-
-.us10y{
-    color:#00ffaa;
-}
-
-.vix{
-    color:#ff5577;
-}
-
-.gold{
-    color:#ff4444;
-}
-
-.fear{
-    color:#ffff00;
 }
 
 @media screen and (max-width:1200px){
 
-    .main-title{
-        font-size:28px;
-        padding:10px;
-    }
+.top-row{
 
-    .prediction-wrapper{
-        width:95%;
-        flex-direction:column;
-        gap:50px;
-    }
+flex-direction:column;
 
-    .prediction-box{
-        width:100%;
-    }
+align-items:center;
 
-    .middle-divider{
-        display:none;
-    }
+gap:40px;
 
-    .box-title{
-        font-size:26px;
-    }
+}
 
-    .label{
-        font-size:22px;
-        width:70px;
-    }
+.bottom-row{
 
-    .btc-price{
-        font-size:36px;
-    }
+flex-direction:column;
 
-    .macro-direction{
-        font-size:30px;
-    }
+align-items:center;
 
-    .global-item{
-        font-size:22px;
-    }
+gap:40px;
+
+}
+
+.coin-box{
+
+width:95%;
+
+}
+
+.title{
+
+font-size:34px;
+
+}
+
+#hkClock{
+
+font-size:24px;
+
+}
+
+.price{
+
+font-size:24px;
+
+}
+
 }
