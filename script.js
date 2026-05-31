@@ -1,355 +1,189 @@
-const WORKER_URL =
-"https://wispy-dawn-5bf8.jacky12345cheung.workers.dev/";
+body{
+    margin:0;
+    padding:0;
+    background:#000;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+    overflow-x:hidden;
+}
 
-const DEFAULT_COINS = [
-    "BTC",
-    "TON",
-    "SUI",
-    "HOME",
-    "SOL",
-    "IOTA"
-];
+.page-wrap{
+    width:100%;
+    min-height:100vh;
+    padding-bottom:80px;
+}
 
-function setText(id,text){
+.title{
+    text-align:center;
+    font-size:56px;
+    font-weight:900;
+    color:#ffffff;
+    margin-top:10px;
+    margin-bottom:10px;
+}
 
-    const el =
-        document.getElementById(id);
+#hkClock{
+    text-align:center;
+    color:#ffff00;
+    font-size:34px;
+    font-weight:900;
+    margin-bottom:35px;
+}
 
-    if(el){
-        el.textContent=text;
+.top-row{
+    display:flex;
+    justify-content:space-around;
+    align-items:flex-start;
+    flex-wrap:wrap;
+}
+
+.bottom-row{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap:220px;
+    margin-top:80px;
+    flex-wrap:wrap;
+}
+
+.coin-box{
+    width:24%;
+    min-width:280px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+}
+
+.coin-title{
+    font-size:18px;
+    font-weight:bold;
+    color:#ffffff;
+    margin-bottom:6px;
+}
+
+.input-row{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin-bottom:18px;
+}
+
+.input-row input{
+    width:90px;
+    height:24px;
+
+    background:#111111;
+    color:#ffffff;
+
+    border:1px solid #444444;
+
+    text-align:center;
+    font-size:16px;
+}
+
+.input-row input:focus{
+    outline:none;
+    border:1px solid #00c853;
+}
+
+.input-row button{
+    width:42px;
+    height:26px;
+
+    background:#00c853;
+    color:#ffffff;
+
+    border:1px solid #00c853;
+
+    font-size:12px;
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.input-row button:hover{
+    background:#00e676;
+}
+
+.price{
+    font-size:28px;
+    font-weight:900;
+
+    color:#ffffff;
+
+    white-space:nowrap;
+    overflow:visible;
+
+    margin-top:5px;
+    margin-bottom:22px;
+}
+
+.move{
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:16px;
+}
+
+.pic{
+    font-size:18px;
+    font-weight:bold;
+    line-height:1.5;
+}
+
+.up{
+    color:#00ff99;
+}
+
+.down{
+    color:#ff5555;
+}
+
+.normal{
+    color:#ffff00;
+}
+
+@media screen and (max-width:1400px){
+
+    .price{
+        font-size:24px;
+    }
+
+    .coin-box{
+        min-width:240px;
     }
 }
 
-function setHTML(id,html){
+@media screen and (max-width:1200px){
 
-    const el =
-        document.getElementById(id);
-
-    if(el){
-        el.innerHTML=html;
-    }
-}
-
-function buildCard(index){
-
-    const coin =
-        DEFAULT_COINS[index-1];
-
-    const el =
-        document.getElementById(
-            "coin"+index
-        );
-
-    el.innerHTML = `
-
-        <div class="coin-title">
-            COIN ${index}
-        </div>
-
-        <div class="input-row">
-
-            <input
-            id="symbol${index}"
-            value="${coin}"
-            type="text">
-
-            <button
-            onclick="reloadCoin(${index})">
-            LOAD
-            </button>
-
-        </div>
-
-        <div
-        class="price"
-        id="price${index}">
-        Loading...
-        </div>
-
-        <div
-        class="move"
-        id="move${index}">
-        </div>
-
-        <div
-        class="pic"
-        id="prediction${index}">
-        </div>
-
-    `;
-}
-
-function reloadCoin(index){
-
-    const input =
-        document.getElementById(
-            "symbol"+index
-        );
-
-    if(!input){
-        return;
+    .top-row{
+        flex-direction:column;
+        align-items:center;
+        gap:50px;
     }
 
-    DEFAULT_COINS[index-1] =
-        input.value
-        .trim()
-        .toUpperCase();
-
-    updateAll();
-}
-
-function getCoinByIndex(data,index){
-
-    if(
-        !data ||
-        !data.coins ||
-        !data.coins[index]
-    ){
-        return null;
+    .bottom-row{
+        flex-direction:column;
+        align-items:center;
+        gap:50px;
+        margin-top:50px;
     }
 
-    return data.coins[index];
-}
-
-async function fetchAll(){
-
-    const response =
-        await fetch(
-            WORKER_URL +
-            "?t=" +
-            Date.now()
-        );
-
-    return await response.json();
-}
-
-function formatPrice(value){
-
-    const n =
-        Number(value);
-
-    if(Number.isNaN(n)){
-        return String(value || "");
+    .coin-box{
+        width:95%;
+        min-width:0;
     }
 
-    return n.toFixed(4);
-}
-
-function formatPercent(value){
-
-    const n =
-        Number(value);
-
-    if(Number.isNaN(n)){
-        return "0.00%";
+    .title{
+        font-size:42px;
     }
 
-    return n.toFixed(2) + "%";
-}
-
-function updateCard(index,coin){
-
-    if(!coin){
-        return;
+    #hkClock{
+        font-size:28px;
     }
 
-    const pair =
-        String(
-            coin.pair || ""
-        );
-
-    setText(
-        "price"+index,
-        pair +
-        " : " +
-        formatPrice(
-            coin.price
-        )
-    );
-
-    const raw =
-        Number(
-            coin.finalPercent || 0
-        );
-
-    const percent =
-        formatPercent(
-            Math.abs(raw)
-        );
-
-    if(coin.bullish){
-
-        setHTML(
-            "move"+index,
-            `<span class="up">
-            ↑ 上升 +${percent}
-            </span>`
-        );
-
-    }else{
-
-        setHTML(
-            "move"+index,
-            `<span class="down">
-            ↓ 下跌 -${percent}
-            </span>`
-        );
-
-    }
-
-    const txt =
-        String(
-            coin.predictionText || ""
-        );
-
-    let cls="down";
-
-    if(
-        txt.includes("極高") ||
-        txt.includes("高勝算率") ||
-        txt.includes("中高") ||
-        txt.includes("+")
-    ){
-        cls="up";
-    }
-
-    if(
-        txt.includes("普通")
-    ){
-        cls="normal";
-    }
-
-    let picText =
-        "Pic : " +
-        txt;
-
-    if(
-        Number(
-            coin.ratio
-        ) > 1
-    ){
-
-        picText +=
-            " (Target:" +
-            formatPrice(
-                coin.targetPrice
-            ) +
-            ")";
-    }
-
-    setHTML(
-        "prediction"+index,
-        `<span class="${cls}">
-        ${picText}
-        </span>`
-    );
-}
-
-async function updateAll(){
-
-    try{
-
-        const data =
-            await fetchAll();
-
-        if(
-            !data ||
-            !data.success ||
-            !data.coins
-        ){
-            return;
-        }
-
-        for(
-            let i=1;
-            i<=6;
-            i++
-        ){
-
-            const coin =
-                getCoinByIndex(
-                    data,
-                    i-1
-                );
-
-            updateCard(
-                i,
-                coin
-            );
-        }
-
-    }catch(error){
-
-        console.log(
-            error
-        );
-
+    .price{
+        font-size:22px;
     }
 }
-
-function updateClock(){
-
-    const now =
-        new Date();
-
-    const hk =
-        new Date(
-            now.toLocaleString(
-                "en-US",
-                {
-                    timeZone:
-                    "Asia/Hong_Kong"
-                }
-            )
-        );
-
-    const hh =
-        String(
-            hk.getHours()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    const mm =
-        String(
-            hk.getMinutes()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    const ss =
-        String(
-            hk.getSeconds()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    setText(
-        "hkClock",
-        `${hh}:${mm}:${ss}`
-    );
-}
-
-for(
-    let i=1;
-    i<=6;
-    i++
-){
-    buildCard(i);
-}
-
-updateClock();
-updateAll();
-
-setInterval(
-    updateClock,
-    1000
-);
-
-setInterval(
-    updateAll,
-    5000
-);
