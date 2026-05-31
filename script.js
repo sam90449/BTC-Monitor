@@ -2,378 +2,415 @@ const WORKER_URL =
 "https://wispy-dawn-5bf8.jacky12345cheung.workers.dev/";
 
 const DEFAULT_COINS = [
-    "BTC",
-    "TON",
-    "SUI",
-    "HOME",
-    "SOL",
-    "IOTA"
+"BTC",
+"TON",
+"SUI",
+"HOME",
+"SOL",
+"IOTA"
 ];
 
 function setText(id,text){
 
-    const el =
-        document.getElementById(id);
+```
+const el =
+    document.getElementById(id);
 
-    if(el){
-        el.textContent=text;
-    }
+if(el){
+    el.textContent=text;
+}
+```
+
 }
 
 function setHTML(id,html){
 
-    const el =
-        document.getElementById(id);
+```
+const el =
+    document.getElementById(id);
 
-    if(el){
-        el.innerHTML=html;
-    }
+if(el){
+    el.innerHTML=html;
+}
+```
+
 }
 
 function buildCard(index){
 
-    const coin =
-        DEFAULT_COINS[index - 1];
+```
+const coin =
+    DEFAULT_COINS[index - 1];
 
-    const el =
-        document.getElementById(
-            "coin" + index
-        );
+const el =
+    document.getElementById(
+        "coin" + index
+    );
 
-    el.innerHTML = `
+if(!el){
+    return;
+}
 
-        <div class="coin-title">
-            COIN ${index}
-        </div>
+el.innerHTML = `
 
-        <div class="input-row">
+    <div class="coin-title">
+        COIN ${index}
+    </div>
 
-            <input
-            id="symbol${index}"
-            value="${coin}"
-            type="text">
+    <div class="input-row">
 
-            <button
-            onclick="reloadCoin(${index})">
-            LOAD
-            </button>
+        <input
+        id="symbol${index}"
+        value="${coin}"
+        type="text">
 
-        </div>
+        <button
+        onclick="reloadCoin(${index})">
+        LOAD
+        </button>
 
-        <div
-        class="price"
-        id="price${index}">
-        Loading...
-        </div>
+    </div>
 
-        <div
-        class="move"
-        id="move${index}">
-        </div>
+    <div
+    class="price"
+    id="price${index}">
+    Loading...
+    </div>
 
-        <div
-        class="pic"
-        id="prediction${index}">
-        </div>
+    <div
+    class="move"
+    id="move${index}">
+    </div>
 
-    `;
+    <div
+    class="pic"
+    id="prediction${index}">
+    </div>
+
+`;
+```
+
 }
 
 function reloadCoin(index){
 
-    const input =
-        document.getElementById(
-            "symbol" + index
-        );
+```
+const input =
+    document.getElementById(
+        "symbol" + index
+    );
 
-    if(!input){
-        return;
-    }
+if(!input){
+    return;
+}
 
-    DEFAULT_COINS[index - 1] =
-        input.value
-        .trim()
-        .toUpperCase();
+DEFAULT_COINS[index - 1] =
+    input.value
+    .trim()
+    .toUpperCase();
 
-    updateAll();
+updateAll();
+```
+
 }
 
 function formatPrice(value){
 
-    const n =
-        Number(value);
+```
+const n =
+    Number(value);
 
-    if(Number.isNaN(n)){
-        return String(value || "");
-    }
+if(Number.isNaN(n)){
+    return String(value || "");
+}
 
-    return n.toFixed(4);
+return n.toFixed(4);
+```
+
 }
 
 function formatPercent(value){
 
-    const n =
-        Number(value);
+```
+const n =
+    Number(value);
 
-    if(Number.isNaN(n)){
-        return "0.00%";
-    }
+if(Number.isNaN(n)){
+    return "0.00%";
+}
 
-    return Math.abs(n).toFixed(2) + "%";
+return Math.abs(n).toFixed(2) + "%";
+```
+
 }
 
 async function fetchAll(){
 
-    const response =
-        await fetch(
-            WORKER_URL +
-            "?t=" +
-            Date.now()
-        );
+```
+const response =
+    await fetch(
+        WORKER_URL +
+        "?t=" +
+        Date.now()
+    );
 
-    return await response.json();
+return await response.json();
+```
+
 }
 
 function findCoin(symbol,data){
 
-    if(
-        !data ||
-        !data.coins
-    ){
-        return null;
-    }
-
-    return data.coins.find(
-        coin =>
-            coin &&
-            coin.pair &&
-            coin.pair
-                .toUpperCase()
-                .startsWith(
-                    symbol.toUpperCase()
-                )
-    );
+```
+if(
+    !data ||
+    !data.coins
+){
+    return null;
 }
 
+return data.coins.find(
+    coin =>
+        coin &&
+        coin.pair &&
+        coin.pair
+            .toUpperCase()
+            .startsWith(
+                symbol.toUpperCase()
+            )
+);
+```
+
+}
 function getPredictionClass(txt){
 
-    if(
-        txt.includes("極高") ||
-        txt.includes("高勝算率") ||
-        txt.includes("中高") ||
-        txt.includes("+")
-    ){
-        return "up";
-    }
+```
+if(
+    txt.includes("極高勝算率") ||
+    txt.includes("高勝算率") ||
+    txt.includes("中高勝算率")
+){
+    return "up";
+}
 
-    if(
-        txt.includes("普通")
-    ){
-        return "normal";
-    }
+if(
+    txt.includes("普通勝算率")
+){
+    return "normal";
+}
 
-    return "down";
+return "down";
+```
+
 }
 
 function updateCard(
-    index,
-    coin
+index,
+coin
 ){
 
-    if(!coin){
+```
+if(!coin){
+    return;
+}
+
+const pair =
+    String(
+        coin.pair || ""
+    );
+
+setText(
+    "price" + index,
+    pair +
+    " : " +
+    formatPrice(
+        coin.price
+    )
+);
+
+const raw =
+    Number(
+        coin.finalPercent || 0
+    );
+
+const percent =
+    formatPercent(raw);
+
+if(
+    coin.bullish
+){
+
+    setHTML(
+        "move" + index,
+        `<span class="up">
+        ↑ 上升 +${percent}
+        </span>`
+    );
+
+}else{
+
+    setHTML(
+        "move" + index,
+        `<span class="down">
+        ↓ 下跌 -${percent}
+        </span>`
+    );
+
+}
+
+const txt =
+    String(
+        coin.pic || ""
+    );
+
+const cls =
+    getPredictionClass(
+        txt
+    );
+
+let picText =
+    "Pic : " +
+    txt;
+
+if(
+    Number(
+        coin.ratio
+    ) > 1
+){
+
+    picText +=
+        " (Target:" +
+        formatPrice(
+            coin.targetPrice
+        ) +
+        ")";
+}
+
+setHTML(
+    "prediction" + index,
+    `<span class="${cls}">
+    ${picText}
+    </span>`
+);
+```
+
+}
+async function updateAll(){
+
+```
+try{
+
+    const data =
+        await fetchAll();
+
+    if(
+        !data ||
+        !data.success ||
+        !data.coins
+    ){
         return;
     }
 
-    const pair =
-        String(
-            coin.pair || ""
-        );
-
-    setText(
-        "price" + index,
-        pair +
-        " : " +
-        formatPrice(
-            coin.price
-        )
-    );
-
-    const raw =
-        Number(
-            coin.finalPercent || 0
-        );
-
-    const percent =
-        formatPercent(raw);
-
-    if(
-        coin.bullish
+    for(
+        let i = 1;
+        i <= 6;
+        i++
     ){
 
-        setHTML(
-            "move" + index,
-            `<span class="up">
-            ↑ 上升 +${percent}
-            </span>`
-        );
+        const symbol =
+            DEFAULT_COINS[
+                i - 1
+            ];
 
-    }else{
-
-        setHTML(
-            "move" + index,
-            `<span class="down">
-            ↓ 下跌 -${percent}
-            </span>`
-        );
-
-    }
-
-    const txt =
-        String(
-            coin.predictionText || ""
-        );
-
-    const cls =
-        getPredictionClass(
-            txt
-        );
-
-    let picText =
-        "Pic : " +
-        txt;
-
-    if(
-        Number(
-            coin.ratio
-        ) > 1
-    ){
-
-        picText +=
-            " (Target:" +
-            formatPrice(
-                coin.targetPrice
-            ) +
-            ")";
-    }
-
-    setHTML(
-        "prediction" + index,
-        `<span class="${cls}">
-        ${picText}
-        </span>`
-    );
-}
-
-async function updateAll(){
-
-    try{
-
-        const data =
-            await fetchAll();
-
-        if(
-            !data ||
-            !data.success ||
-            !data.coins
-        ){
-            return;
-        }
-
-        for(
-            let i = 1;
-            i <= 6;
-            i++
-        ){
-
-            const symbol =
-                DEFAULT_COINS[
-                    i - 1
-                ];
-
-            const coin =
-                findCoin(
-                    symbol,
-                    data
-                );
-
-            updateCard(
-                i,
-                coin
+        const coin =
+            findCoin(
+                symbol,
+                data
             );
-        }
 
-    }catch(error){
-
-        console.log(
-            error
+        updateCard(
+            i,
+            coin
         );
-
     }
+
+}catch(error){
+
+    console.log(
+        error
+    );
+
+}
+```
+
 }
 
 function updateClock(){
 
-    const now =
-        new Date();
+```
+const now =
+    new Date();
 
-    const hk =
-        new Date(
-            now.toLocaleString(
-                "en-US",
-                {
-                    timeZone:
-                    "Asia/Hong_Kong"
-                }
-            )
-        );
-
-    const hh =
-        String(
-            hk.getHours()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    const mm =
-        String(
-            hk.getMinutes()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    const ss =
-        String(
-            hk.getSeconds()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    setText(
-        "hkClock",
-        `${hh}:${mm}:${ss}`
+const hk =
+    new Date(
+        now.toLocaleString(
+            "en-US",
+            {
+                timeZone:
+                "Asia/Hong_Kong"
+            }
+        )
     );
+
+const hh =
+    String(
+        hk.getHours()
+    ).padStart(
+        2,
+        "0"
+    );
+
+const mm =
+    String(
+        hk.getMinutes()
+    ).padStart(
+        2,
+        "0"
+    );
+
+const ss =
+    String(
+        hk.getSeconds()
+    ).padStart(
+        2,
+        "0"
+    );
+
+setText(
+    "hkClock",
+    `${hh}:${mm}:${ss}`
+);
+```
+
 }
 
 for(
-    let i = 1;
-    i <= 6;
-    i++
+let i = 1;
+i <= 6;
+i++
 ){
-    buildCard(i);
+buildCard(i);
 }
 
 updateClock();
 updateAll();
 
 setInterval(
-    updateClock,
-    1000
+updateClock,
+1000
 );
 
 setInterval(
-    updateAll,
-    5000
+updateAll,
+5000
 );
