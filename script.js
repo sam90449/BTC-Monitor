@@ -1,431 +1,313 @@
 const WORKER_URL =
-"https://wispy-dawn-5bf8.jacky12345cheung.workers.dev/";
+"https://withered-shape-2779.jacky12345cheung.workers.dev/";
 
-const DEFAULT_COINS = [
-    "BTC",
-    "TON",
-    "SUI",
-    "HOME",
-    "SOL",
-    "IOTA"
+const defaultCoins = [
+  "BTC",
+  "HOME",
+  "TON",
+  "SUI",
+  "SOL",
+  "IOTA"
 ];
 
-function setText(id,text){
+function loadSavedCoins() {
 
-    const el =
-        document.getElementById(id);
+  const arr = [];
 
-    if(el){
-        el.textContent = text;
-    }
-}
+  for (let i = 1; i <= 6; i++) {
 
-function setHTML(id,html){
+    const coin =
+      localStorage.getItem(
+        "coin" + i
+      );
 
-    const el =
-        document.getElementById(id);
-
-    if(el){
-        el.innerHTML = html;
-    }
-}
-
-function formatPrice(value){
-
-    const n = Number(value);
-
-    if(Number.isNaN(n)){
-        return "--";
-    }
-
-    if(n >= 1000){
-        return n.toFixed(4);
-    }
-
-    if(n >= 1){
-        return n.toFixed(4);
-    }
-
-    return n.toFixed(4);
-}
-
-function formatPercent(value){
-
-    const n = Number(value);
-
-    if(Number.isNaN(n)){
-        return "0.00";
-    }
-
-    return Math.abs(n).toFixed(2);
-}
-
-function buildCard(index){
-
-    const symbol =
-        DEFAULT_COINS[index - 1];
-
-    const el =
-        document.getElementById(
-            "coin" + index
-        );
-
-    if(!el){
-        return;
-    }
-
-    el.innerHTML = `
-
-        <div class="coin-title">
-            COIN ${index}
-        </div>
-
-        <div class="input-row">
-
-            <input
-                id="symbol${index}"
-                class="coin-input"
-                type="text"
-                value="${symbol}"
-            >
-
-            <button
-                class="load-btn"
-                onclick="reloadCoin(${index})"
-            >
-                LOAD
-            </button>
-
-        </div>
-
-        <div
-            id="price${index}"
-            class="price"
-        >
-            Loading...
-        </div>
-
-        <div
-            id="move${index}"
-            class="move"
-        >
-        </div>
-
-        <div
-            id="prediction${index}"
-            class="prediction"
-        >
-        </div>
-
-    `;
-}
-
-function reloadCoin(index){
-
-    const input =
-        document.getElementById(
-            "symbol" + index
-        );
-
-    if(!input){
-        return;
-    }
-
-    DEFAULT_COINS[index - 1] =
-        input.value
-        .trim()
-        .toUpperCase();
-
-    updateAll();
-}
-
-function getPredictionClass(txt){
-
-    const t =
-        String(txt || "");
-
-    if(
-        t.includes("極高勝算率") ||
-        t.includes("高勝算率") ||
-        t.includes("中高勝算率")
-    ){
-        return "up";
-    }
-
-    if(
-        t.includes("普通勝算率")
-    ){
-        return "normal";
-    }
-
-    return "down";
-}
-
-async function fetchAll(){
-
-    const response =
-        await fetch(
-            WORKER_URL +
-            "?t=" +
-            Date.now()
-        );
-
-    return await response.json();
-}
-
-function findCoin(symbol,data){
-
-    if(
-        !data ||
-        !Array.isArray(data.coins)
-    ){
-        return null;
-    }
-
-    return data.coins.find(
-        coin =>
-            coin &&
-            coin.pair &&
-            coin.pair
-                .toUpperCase()
-                .startsWith(
-                    symbol.toUpperCase()
-                )
+    arr.push(
+      coin || defaultCoins[i - 1]
     );
+  }
+
+  return arr;
 }
-function updateCard(
-    index,
-    coin
-){
 
-    if(!coin){
-        return;
-    }
+function saveCoin(index, coin) {
 
-    const pair =
-        String(
-            coin.pair || ""
-        );
+  localStorage.setItem(
+    "coin" + index,
+    coin.toUpperCase()
+  );
+}
 
-    const price =
-        formatPrice(
-            coin.price
-        );
+function buildCard(index) {
 
-    setText(
-        "price" + index,
-        pair +
-        " : " +
-        price
+  const container =
+    document.getElementById(
+      "coin" + index
     );
 
-    const rawPercent =
-        Number(
-            coin.finalPercent || 0
-        );
+  container.innerHTML = `
+    <div class="card-title">
+      COIN ${index}
+    </div>
 
-    const bullish =
-        rawPercent >= 0;
+    <div class="input-row">
 
-    const percentText =
-        formatPercent(
-            rawPercent
-        );
+      <input
+      id="input${index}"
+      type="text">
 
-    if(bullish){
+      <button
+      onclick="reloadCoin(${index})">
 
-        setHTML(
-            "move" + index,
-            `<span class="up">
-                ↑ 上升 +${percentText}%
-            </span>`
-        );
+      LOAD
 
-    }else{
+      </button>
 
-        setHTML(
-            "move" + index,
-            `<span class="down">
-                ↓ 下跌 -${percentText}%
-            </span>`
-        );
+    </div>
 
-    }
+    <div
+    id="price${index}"
+    class="price">
 
-    const picValue =
-        String(
-            coin.pic ||
-            coin.predictionText ||
-            ""
-        );
+    Loading...
 
-    const cls =
-        getPredictionClass(
-            picValue
-        );
+    </div>
 
-    let html =
-        "Pic : " +
-        picValue;
+    <div
+    id="prediction${index}"
+    class="prediction">
 
-    if(
-        coin.targetPrice !==
-        undefined &&
-        coin.targetPrice !==
-        null &&
-        Number(
-            coin.ratio || 0
-        ) > 1
-    ){
+    ...
 
-        html +=
-            "<br>" +
-            "Target : " +
-            formatPrice(
-                coin.targetPrice
-            );
-    }
+    </div>
 
-    if(
-        coin.ratio !==
-        undefined
-    ){
+    <div
+    id="target${index}"
+    class="target">
 
-        html +=
-            "<br>" +
-            "Ratio : " +
-            Number(
-                coin.ratio
-            ).toFixed(2);
-    }
+    ...
 
-    setHTML(
-        "prediction" + index,
-        `<span class="${cls}">
-            ${html}
-        </span>`
-    );
+    </div>
+
+    <div
+    id="update${index}"
+    class="update">
+
+    ...
+
+    </div>
+  `;
 }
 
-function updateClock(){
+function initCards() {
 
-    const now =
-        new Date();
-
-    const hk =
-        new Date(
-            now.toLocaleString(
-                "en-US",
-                {
-                    timeZone:
-                    "Asia/Hong_Kong"
-                }
-            )
-        );
-
-    const hh =
-        String(
-            hk.getHours()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    const mm =
-        String(
-            hk.getMinutes()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    const ss =
-        String(
-            hk.getSeconds()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    setText(
-        "hkClock",
-        `${hh}:${mm}:${ss}`
-    );
-}
-async function updateAll(){
-
-    try{
-
-        const data =
-            await fetchAll();
-
-        if(
-            !data ||
-            !data.success ||
-            !data.coins
-        ){
-            return;
-        }
-
-        for(
-            let i = 1;
-            i <= 6;
-            i++
-        ){
-
-            const symbol =
-                DEFAULT_COINS[
-                    i - 1
-                ];
-
-            const coin =
-                findCoin(
-                    symbol,
-                    data
-                );
-
-            updateCard(
-                i,
-                coin
-            );
-        }
-
-    }catch(error){
-
-        console.log(
-            "updateAll error",
-            error
-        );
-
-    }
-}
-
-for(
+  for (
     let i = 1;
     i <= 6;
     i++
-){
+  ) {
 
     buildCard(i);
+  }
 
+  const coins =
+    loadSavedCoins();
+
+  for (
+    let i = 1;
+    i <= 6;
+    i++
+  ) {
+
+    document
+      .getElementById(
+        "input" + i
+      )
+      .value =
+      coins[i - 1];
+  }
 }
 
-updateClock();
+async function fetchCoin(symbol) {
+
+  const url =
+    WORKER_URL +
+    "?symbol=" +
+    encodeURIComponent(symbol) +
+    "&t=" +
+    Date.now();
+
+  const res =
+    await fetch(url);
+
+  const data =
+    await res.json();
+
+  return data;
+}
+
+function setText(id, text) {
+
+  const el =
+    document.getElementById(id);
+
+  if (el) {
+
+    el.textContent = text;
+  }
+}
+
+function setHTML(id, html) {
+
+  const el =
+    document.getElementById(id);
+
+  if (el) {
+
+    el.innerHTML = html;
+  }
+}
+
+async function updateCoin(index) {
+
+  try {
+
+    const symbol =
+      document
+        .getElementById(
+          "input" + index
+        )
+        .value
+        .trim()
+        .toUpperCase();
+
+    if (!symbol) {
+      return;
+    }
+
+    const d =
+      await fetchCoin(symbol);
+
+    if (!d.success) {
+
+      setText(
+        "price" + index,
+        "Invalid Coin"
+      );
+
+      setText(
+        "prediction" + index,
+        d.error || ""
+      );
+
+      return;
+    }
+
+    setText(
+      "price" + index,
+      d.symbol +
+      " : " +
+      d.price
+    );
+
+    let color = "up";
+
+    if (!d.bullish) {
+      color = "down";
+    }
+
+    setHTML(
+      "prediction" + index,
+
+      `<span class="${color}">
+      1-3H Prediction :
+      ${d.predictionText}
+      </span>`
+    );
+
+    if (d.ratio <= 1) {
+
+      setText(
+        "target" + index,
+        ""
+      );
+
+    } else {
+
+      setText(
+        "target" + index,
+        "Target : " +
+        d.targetPrice
+      );
+    }
+
+    setText(
+      "update" + index,
+      "Update : " +
+      d.updateTime
+    );
+
+  }
+  catch (e) {
+
+    setText(
+      "price" + index,
+      "Error"
+    );
+
+    setText(
+      "prediction" + index,
+      e.message
+    );
+
+    setText(
+      "target" + index,
+      ""
+    );
+  }
+}
+
+async function updateAll() {
+
+  for (
+    let i = 1;
+    i <= 6;
+    i++
+  ) {
+
+    await updateCoin(i);
+  }
+}
+
+function reloadCoin(index) {
+
+  const coin =
+    document
+      .getElementById(
+        "input" + index
+      )
+      .value
+      .trim()
+      .toUpperCase();
+
+  if (!coin) {
+    return;
+  }
+
+  saveCoin(
+    index,
+    coin
+  );
+
+  updateCoin(
+    index
+  );
+}
+
+initCards();
 
 updateAll();
 
 setInterval(
-
-    updateClock,
-
-    1000
-
-);
-
-setInterval(
-
-    updateAll,
-
-    5000
-
+  updateAll,
+  60000
 );
